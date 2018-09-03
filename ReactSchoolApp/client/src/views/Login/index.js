@@ -8,15 +8,16 @@ import { connect } from "react-redux";
 
 class LoginView extends Component 
 {
-  constructor(props) {
+  constructor(props) 
+  {
     super(props);
 
     // reset login status
     this.props.dispatch(userActions.logout());
 
-    this.state = {
+    this.state = 
+    {
       activeTab: 'login',
-
       loginEmail: '',
       loginPassword: '',
       loginSubmitted: false,
@@ -35,7 +36,8 @@ class LoginView extends Component
   }
 
   toggle(tab) {
-    if (this.state.activeTab !== tab) {
+    if (this.state.activeTab !== tab) 
+    {
       this.setState({
         activeTab: tab
       });

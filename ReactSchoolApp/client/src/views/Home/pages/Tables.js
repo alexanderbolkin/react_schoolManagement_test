@@ -1,12 +1,66 @@
 import React, {Component} from 'react';
 import WidgetComponent from "../../../components/Widget";
-import { Button, ButtonGroup } from 'reactstrap';
-class TablesPage extends Component {
+import { authHeader } from "../../../helpers/auth-header";
+import { Link } from 'react-router-dom';
 
-  render() {
-    return (
+class TablesPage extends Component 
+{
+  constructor(props) 
+  {
+    super(props);
+    this.state = {
+      users: []
+    };
+    this.requestOptions = {
+      method: 'GET',
+      headers: authHeader()
+    };
+  }
+  componentWillMount() 
+  {
+    this.loadUserData();
+  }
+
+  loadUserData() 
+  {
+    fetch('http://127.0.0.1:3003/user/', this.requestOptions)
+      .then(response => response.json())
+      .then(response => {
+        let data = response.data.docs;
+        this.setState({ users: data })
+      });
+  }
+
+  delete(id) {
+    fetch('http://127.0.0.1:3003/user/' + id, { method: 'delete' }, this.requestOptions)
+      .then(response => {
+        this.props.history.push("/")
+      });
+  }
+
+
+  render() 
+  {
+    const apis = this.state.users.map((item, i) => 
+    {
+      return <tr key={item._id}>
+        <td className="ellipsis">{i + 1}</td>
+        <td>{item.username}</td>
+        <td className="ellipsis">{item.email}</td>
+        <td>
+          <div className="btn-toolbar button-center">
+
+            <Link to={`/edit/${item._id}`} className="btn btn-success">Edit</Link>&nbsp;
+                <button onClick={this.delete.bind(this, item._id)} className="btn btn-danger button-margin">Delete</button>
+          </div>
+
+        </td>
+      </tr>
+    });
+
+    return 
+    (
       <div className="content-wrapper container-fluid px-5 mb-4 trans-03-in-out mt-5">
-
         <div className="row">
           <div className="col-lg-12 mb-3 mt-2">
             <WidgetComponent header='General Item' className='shadow-01 mt-2' moreLink='#!' excerpt='When you create the new school, you should write more correctly.First of all,before click Add button,You have to check spells of text.'>
@@ -22,37 +76,13 @@ class TablesPage extends Component {
                 <thead>
                 <tr>
                   <th>#</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
                   <th>User Name</th>
                   <th>Email</th>
                   <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                  <th>1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>
-                    <Button className="edit" color="success">Edit</Button>{' '}
-                    <Button className="delete" color="danger">Delete</Button>{' '}
-                  </td>
-
-                </tr>
-                <tr>
-                  <th>2</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>
-                    <Button className="edit" color="success">Edit</Button>{' '}
-                    <Button className="delete" color="danger">Delete</Button>{' '}
-                  </td>
-                </tr>
+                    {apis}
                 </tbody>
               </table>
             </WidgetComponent>
@@ -62,64 +92,9 @@ class TablesPage extends Component {
         <div className="row">
             <div className="col-lg-12  mt-5"></div>
         </div>
-
       </div>
     );
   }
 }
-////////////////////////////////////////////////////////////
-// if (this.props.ChrList.Loading === 'false') {
-
-  // const apis = this.props.ChrList.list.map((item, i) => {
-  //     return <tr key={item._id}><td className="ellipsis">{item._id}      </td>
-  //         <td>{item.Character_Name}</td>
-  //         <td className="ellipsis">{item.Character_ID}</td>
-  //         <td className="ellipsis">{item.Access_Token}</td>
-  //         <td className="ellipsis">{item.Refresh_Token}</td>
-  //         <td>
-             
-  //         </td>
-  //     </tr>
-
-  // });
-
-  // return <div  >
-  //     <table className='table'>
-  //         <tbody>
-  //             <tr>
-  //                 <th> Id </th>
-  //                 <th> Character Name </th>
-  //                 <th> Character ID</th>
-  //                 <th> Access Token </th>
-  //                 <th> Refresh Token</th>
-  //                 <th> Actions</th>
-  //             </tr>
-  //             {apis}
-  //         </tbody>
-  //     </table>
-  // </div>
-// } 
-// else {
-//   return <div  >
-//       <h1>Loading...</h1>
-//   </div>
-// }
-// ///////////////////////////////////////////////////
-// export const PostsListRow = ({post, onDelete}) => {
-//   return (
-//     <tr key={post.id}>
-//       <td>{post.id}</td>
-//       <td>{post.title}</td>
-//       <td>{post.category_id}</td>
-//       <td>
-//         <div className="btn-toolbar pull-right">
-//           <Link to={`/posts/${post.id}`} className="btn btn-primary">Edit</Link>
-//           <a onClick={onDelete.bind(this, post)} className="btn btn-danger">Delete</a>
-//         </div>
-//       </td>
-//     </tr>
-//   )
-// };
-//////////////////////////////////////////////////////////
 
 export default TablesPage;

@@ -2,8 +2,8 @@ const { mongoose } = require('../../config');
 const mongoosePaginate = require('mongoose-paginate');
 
 let UserSchema = new mongoose.Schema({
-  firstName:String,
-  lastName:String,
+  // firstName:String,
+  // lastName:String,
   username: String,
   password: String,
   email: String,

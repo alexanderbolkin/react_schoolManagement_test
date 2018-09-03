@@ -13,18 +13,21 @@ app.use(bodyParser.urlencoded({ extended: false}));
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, 'dist')));
 
+
 // use JWT auth to secure the api, the token can be passed in the authorization header or querystring
-app.use(expressJwt({
-  secret: 'secretcode_jasndkasjdbajhsbdjhbasjd',
-  getToken: req => {
-    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-      return req.headers.authorization.split(' ')[1];
-    } else if (req.query && req.query.token) {
-      return req.query.token;
-    }
-    return null;
-  }
-}).unless({ path: ['/images/', '/user/authenticate', '/user/register'] }));
+// app.use(expressJwt({
+//   secret: 'secretcode_jasndkasjdbajhsbdjhbasjd',
+//   getToken: req => {
+//     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+//       return req.headers.authorization.split(' ')[1];
+//     } else if (req.query && req.query.token) {
+//       return req.query.token;
+//     }
+//     return null;
+//   }
+// }).unless({ path: ['/images/', '/user/authenticate', '/user/register'] }));
+
+
 
 // Routes
 app.use('/user', require('./api/routes/user.route'));
